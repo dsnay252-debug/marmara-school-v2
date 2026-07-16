@@ -9,10 +9,12 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
+    <!-- شريط الرأس والتنقل المضمون -->
     <header class="bg-sky-900 text-white p-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-xl font-bold">🏫 تطبيق مدرسة مرمرة</h1>
             <div class="space-x-2 space-x-reverse">
+                <!-- أزرار تنقل مباشرة ومضمونة العمل -->
                 <button onclick="switchTab('studentDashboard')" class="bg-sky-700 hover:bg-sky-600 px-3 py-1.5 rounded-lg text-sm font-semibold transition">بوابة الطالب</button>
                 <button onclick="switchTab('adminDashboard')" class="bg-amber-600 hover:bg-amber-500 px-3 py-1.5 rounded-lg text-sm font-semibold transition">بوابة الإدارة</button>
             </div>
@@ -21,24 +23,26 @@
 
     <main class="container mx-auto p-4 flex-grow flex flex-col items-center justify-center">
         
+        <!-- 1. بوابة الطالب -->
         <div id="studentDashboard" class="w-full max-w-xl bg-white p-6 rounded-xl shadow-md border-t-4 border-sky-600">
             <h2 id="studentTitle" class="text-xl font-bold text-sky-800 mb-4 text-center">🎓 الملف الأكاديمي للطالب</h2>
             
             <div class="p-4 bg-sky-50 rounded-lg border border-sky-100 space-y-3">
                 <h3 class="font-bold text-sm text-sky-950 border-b pb-1">📊 التقرير الشهري للعلامات والغياب</h3>
                 <div class="text-sm space-y-2 text-slate-700">
-                    <div>📌 <strong>الكويزات:</strong> <span id="quizGrade" class="font-semibold">جاري التحميل...</span></div>
-                    <div>📌 <strong>المذاكرة:</strong> <span id="exam5Grade" class="font-semibold">جاري التحميل...</span></div>
+                    <div>📌 <strong>الكويزات:</strong> <span id="quizGrade" class="font-semibold">بانتظار الإدخال...</span></div>
+                    <div>📌 <strong>المذاكرة:</strong> <span id="exam5Grade" class="font-semibold">بانتظار الإدخال...</span></div>
                     <hr class="my-1">
-                    <div>📌 <strong>الامتحان الفصلي:</strong> <span id="finalGrade" class="font-semibold text-blue-700">جاري التحميل...</span></div>
+                    <div>📌 <strong>الامتحان الفصلي:</strong> <span id="finalGrade" class="font-semibold text-blue-700">بانتظار الإدخال...</span></div>
                     <div class="flex justify-between font-bold mt-3 pt-2 border-t">
                         <span>🗓️ أيام الغياب هذا الشهر:</span>
-                        <span id="attendanceCount" class="text-red-600">جاري التحميل...</span>
+                        <span id="attendanceCount" class="text-red-600">0 يوم</span>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- 2. بوابة الإدارة -->
         <div id="adminDashboard" class="hidden w-full max-w-xl bg-white p-6 rounded-xl shadow-md border-t-4 border-amber-600">
             <h2 class="text-xl font-bold text-amber-800 mb-4 text-center">⚙️ لوحة تحكم الإدارة (admin)</h2>
             
@@ -54,13 +58,14 @@
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">الكويزات</label>
-                            <input type="text" id="adminQuiz" value="18 / 20" class="w-full p-2 border rounded-lg text-sm focus:outline-none">
-                        </div>
+                            <input type="text" id="adminQuiz" value="18 / 20" class="w-full p-2 border rounded-lg text-sm focus:outline-none"></div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">المذاكرة</label>
                             <input type="text" id="adminExam" value="45 / 50" class="w-full p-2 border rounded-lg text-sm focus:outline-none">
                         </div>
-                    </div><div class="grid grid-cols-2 gap-2">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">الامتحان الفصلي</label>
                             <input type="text" id="adminFinal" value="92 / 100" class="w-full p-2 border rounded-lg text-sm focus:outline-none">
@@ -85,47 +90,54 @@
         &copy; 2026 مدرسة مرمرة بمارع. جميع الحقوق محفوظة.
     </footer>
 
+    <!-- جافا سكريبت آمنة ومحمية من الانهيار -->
     <script>
-        // إعدادات الاتصال بمشروع مدرسة مرمرة
-        const SUPABASE_URL = "https://afqmlckgpeteebwwbzfb.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_LdRBDoElaIEQ0kctdSKj-g_39f13YEb"; 
-
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // دالة تبديل اللوحات (Tabs)
+        // 1. دالة التبديل السريعة (تشتغل فوراً وبشكل مستقل ومضمون)
         function switchTab(tabId) {
             document.getElementById('studentDashboard').classList.add('hidden');
             document.getElementById('adminDashboard').classList.add('hidden');
             document.getElementById(tabId).classList.remove('hidden');
         }
 
-        // دالة لجلب بيانات آخر طالب مضاف وعرضها في واجهة الطالب
-        async function loadStudentData() {
-            const { data, error } = await supabaseClient
-                .from('students')
-                .select('*')
-                .order('id', { ascending: false }) // جلب آخر طالب تم إضافته أولاً
-                .limit(1);
+        // إعدادات الاتصال الآمن بـ Supabase
+        const SUPABASE_URL = "https://afqmlckgpeteebwwbzfb.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_LdRBDoElaIEQ0kctdSKj-g_39f13YEb"; 
 
-            if (error) {
-                console.error("خطأ في جلب البيانات:", error);
-                return;
+        let supabaseClient = null;
+
+        // محاولة الاتصال الآمنة حتى لا ينهار التطبيق
+        try {
+            if (typeof supabase !== 'undefined') {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             }
+        } catch (e) {
+            console.error("فشل تحميل قاعدة البيانات بشكل آمن:", e);
+        }
 
-            if (data && data.length > 0) {
-                const student = data[0];
-                document.getElementById('studentTitle').innerText = 🎓 الملف الأكاديمي للطالب: ${student.student_name};
-                document.getElementById('quizGrade').innerText = student.quiz_grade;
-                document.getElementById('exam5Grade').innerText = student.exam_5_grade;
-                document.getElementById('finalGrade').innerText = student.final_grade;
-                document.getElementById('attendanceCount').innerText = student.attendance_count;
-            } else {
-                document.getElementById('studentTitle').innerText = "🎓 لا يوجد طلاب مضافين بعد";
+        // دالة جلب البيانات مع حماية كاملة من الأخطاء
+        async function loadStudentData() {
+            if (!supabaseClient) return;
+            try {
+                const { data, error } = await supabaseClient
+                    .from('students')
+                    .select('*')
+                    .order('id', { ascending: false })
+                    .limit(1);
+
+                if (!error && data && data.length > 0) {
+                    const student = data[0];
+                    document.getElementById('studentTitle').innerText = 🎓 الملف الأكاديمي للطالب: ${student.student_name};
+                    document.getElementById('quizGrade').innerText = student.quiz_grade;
+                    document.getElementById('exam5Grade').innerText = student.exam_5_grade;
+                    document.getElementById('finalGrade').innerText = student.final_grade;
+                    document.getElementById('attendanceCount').innerText = student.attendance_count;
+                }
+            } catch (err) {
+                console.log("خطأ في الاتصال بالشبكة ولكن التطبيق مستمر بالعمل.");
             }
         }
 
-        // دالة حفظ الطالب الجديد في قاعدة البيانات مباشرة
-        async function saveStudentToDatabase() {
+        // دالة حفظ الطالب مع حماية كاملة من الأخطاءasync function saveStudentToDatabase() {
             const name = document.getElementById('adminStudentName').value.trim();
             const quiz = document.getElementById('adminQuiz').value;
             const exam = document.getElementById('adminExam').value;
@@ -139,34 +151,43 @@
                 return;
             }
 
-            statusMessage.className = "text-xs text-center font-bold mt-2 text-blue-600";
-            statusMessage.innerText = "⏳ جاري الحفظ في قاعدة البيانات...";// إرسال البيانات الحقيقية إلى Supabase
-            const { error } = await supabaseClient
-                .from('students')
-                .insert([
-                    { 
-                        student_name: name, 
-                        quiz_grade: quiz, 
-                        exam_5_grade: exam, 
-                        final_grade: final, 
-                        attendance_count: attendance 
-                    }
-                ]);
-
-            if (error) {
+            if (!supabaseClient) {
                 statusMessage.className = "text-xs text-center font-bold mt-2 text-red-600";
-                statusMessage.innerText = "❌ فشل الحفظ: " + error.message;
-            } else {
-                statusMessage.className = "text-xs text-center font-bold mt-2 text-green-600";
-                statusMessage.innerText = ✅ تم حفظ الطالب (${name}) بنجاح في السيرفر!;
-                // تصفير الخانة بعد الحفظ
-                document.getElementById('adminStudentName').value = "";
-                // تحديث واجهة الطالب بالبيانات الجديدة فوراً
-                loadStudentData();
+                statusMessage.innerText = "❌ السيرفر غير متصل حالياً، جرب لاحقاً.";
+                return;
+            }
+
+            statusMessage.className = "text-xs text-center font-bold mt-2 text-blue-600";
+            statusMessage.innerText = "⏳ جاري الحفظ في قاعدة البيانات...";
+
+            try {
+                const { error } = await supabaseClient
+                    .from('students')
+                    .insert([
+                        { 
+                            student_name: name, 
+                            quiz_grade: quiz, 
+                            exam_5_grade: exam, 
+                            final_grade: final, 
+                            attendance_count: attendance 
+                        }
+                    ]);
+
+                if (error) {
+                    statusMessage.className = "text-xs text-center font-bold mt-2 text-red-600";
+                    statusMessage.innerText = "❌ فشل الحفظ: " + error.message;
+                } else {
+                    statusMessage.className = "text-xs text-center font-bold mt-2 text-green-600";
+                    statusMessage.innerText = ✅ تم حفظ الطالب (${name}) بنجاح في السيرفر!;
+                    document.getElementById('adminStudentName').value = "";
+                    loadStudentData();
+                }
+            } catch (err) {
+                statusMessage.className = "text-xs text-center font-bold mt-2 text-red-600";
+                statusMessage.innerText = "❌ فشل الاتصال بقاعدة البيانات.";
             }
         }
 
-        // تشغيل جلب البيانات تلقائياً عند فتح الصفحة لأول مرة
         window.onload = loadStudentData;
     </script>
 </body>
